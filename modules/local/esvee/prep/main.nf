@@ -67,12 +67,13 @@ process ESVEE_PREP {
     """
     mkdir -p prep/
 
-    touch "prep/${meta.normal_id}.esvee.prep.bam"
-    touch "prep/${meta.normal_id}.esvee.prep.bam.bai"
-    touch "prep/${meta.tumor_id}.esvee.prep.bam"
-    touch "prep/${meta.tumor_id}.esvee.prep.bam.bai"
-    touch "prep/${meta.tumor_id}.esvee.prep.fragment_length.tsv"
-    touch "prep/${meta.tumor_id}.esvee.prep.junction.tsv"
+    ${ (meta.normal_id != null) ? "touch prep/${meta.normal_id}.esvee.prep.bam" : "" }
+    ${ (meta.normal_id != null) ? "touch prep/${meta.normal_id}.esvee.prep.bam.bai" : "" }
+
+    touch prep/${meta.tumor_id}.esvee.prep.bam
+    touch prep/${meta.tumor_id}.esvee.prep.bam.bai
+    touch prep/${meta.tumor_id}.esvee.prep.fragment_length.tsv
+    touch prep/${meta.tumor_id}.esvee.prep.junction.tsv
 
     echo -e '${task.process}:\\n  stub: noversions\\n' > versions.yml
     """
