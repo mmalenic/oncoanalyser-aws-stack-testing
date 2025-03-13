@@ -201,7 +201,10 @@ workflow PREPARE_REFERENCE {
                 .map { dir_list ->
                     assert dir_list.size() == 1
                     def dirpath = dir_list[0].toUriString()
-                    return createDataMap(panel_data_paths, dirpath)
+                    def a = createDataMap(panel_data_paths, dirpath)
+                    println a.dump()
+
+                    return a
                 }
 
         } else {
@@ -215,6 +218,9 @@ workflow PREPARE_REFERENCE {
     // Write prepared reference data if requested
     //
     if (params.prepare_reference_only) {
+
+        println ch_hmf_data.dump()
+        println ch_panel_data.dump()
 
         // Create channel of data files to stage (if not already local) and write
         ch_refdata = Channel.empty()
@@ -279,9 +285,13 @@ def getRefdataFile(filepath, ref_data_path) {
 }
 
 def getDataBaseDirectory(data) {
+    println data.dump()
     def c = []
     data
-        .collect { it.value.toUriString().getChars() }
+        .collect {
+            println it.dump()
+            it.value.toUriString().getChars()
+        }
         .transpose()
         .findIndexOf {
             def cs = it.unique()
@@ -289,5 +299,6 @@ def getDataBaseDirectory(data) {
             c << cs.pop()
             return false
         }
+    println c.dump()
     return file("${c.join('')}")
 }
