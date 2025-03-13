@@ -281,7 +281,13 @@ def getRefdataFile(filepath, ref_data_path) {
 def getDataBaseDirectory(data) {
     def c = []
     data
-        .collect { it.value.toUriString().getChars() }
+        .collectMany {
+            if (it.value) {
+                return [it.value.toUriString().getChars()]
+            } else {
+                return []
+            }
+        }
         .transpose()
         .findIndexOf {
             def cs = it.unique()
